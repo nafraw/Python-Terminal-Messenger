@@ -4,9 +4,9 @@ Created on Sun May  2 15:46:14 2021
 
 @author: Ping-Keng Jao (pingkeng.jao@gmail.com)
 """
-# Idea of this file:
-#   defines frequently used warn and error message function to highlight texts
-#   add personal styles of highlighting messages if desired
+# Purpose of this file:
+#   defines frequently used warn and error message functions to highlight texts
+#   add personal formats of highlighting messages if desired
 
 # Some related reference below
 # ref: https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
@@ -14,18 +14,27 @@ Created on Sun May  2 15:46:14 2021
 
 from termcolor import colored, COLORS, HIGHLIGHTS, ATTRIBUTES
 
-class Messenger:    
-    WARNING_TEXT = None
-    WARNING_BACK = 'on_magenta'
-    WARNING_STYLE = None # note style must be a list    
-    ERROR_TEXT = None
-    ERROR_BACK = 'on_red'
-    ERROR_STYLE = None
-    #ENDC = '\x1b[0m'
+class Messenger:
+    ''' The following three variables are together refered as format here '''
+    TEXT_COLOR = {'WARN': None, 'ERROR': None}
+    BACK_COLOR = {'WARN': 'on_magenta', 'ERROR': 'on_red'}
+    STYLE = {'WARN': None, 'ERROR': None}
     
     def __init__(self):
         self.reset_default_color()
-
+    ''' Functions to Print colored texts '''
+    def custom_msg(name_of_format: str, msg: str, show=True):
+        msg = colored(msg, color=Messenger.TEXT_COLOR[name_of_format], on_color=Messenger.BACK_COLOR[name_of_format], attrs=Messenger.STYLE[name_of_format])
+        if show: print(msg)
+        return msg        
+    
+    def error(msg: str, show=True) -> str:
+        return Messenger.custom_msg('ERROR', msg, show)
+    
+    def warn(msg: str, show=True) -> str:
+        return Messenger.custom_msg('WARN', msg, show)
+    
+    ''' Functions to Print supported colors and styles '''
     def show_available_text_colors():
         print(COLORS.keys())
 
@@ -35,56 +44,46 @@ class Messenger:
     def show_available_styles():
         print(ATTRIBUTES.keys())
     
+    ''' Functions to Change formats '''    
     def set_format(name_of_format: str, color=None, back_color=None, style=None):        
         if color:
             if color not in COLORS:
                 Messenger.error(f"{color} doesn't exist, please call Messenger.show_available_text_colors() for a supported list")
-            exec(f"Messenger.{name_of_format}_TEXT='{color}'")
+            Messenger.TEXT_COLOR[name_of_format] = color
         else:
-            exec(f"Messenger.{name_of_format}_TEXT=None")
+            Messenger.TEXT_COLOR[name_of_format] = None
         if back_color:
             if back_color not in HIGHLIGHTS:
                 Messenger.error(f"{back_color} doesn't exist, please call Messenger.show_available_back_colors() for a supported list")
-            exec(f"Messenger.{name_of_format}_BACK='{back_color}'")
+            Messenger.BACK_COLOR[name_of_format] = back_color
         else:
-            exec(f"Messenger.{name_of_format}_BACK=None")        
+            Messenger.BACK_COLOR[name_of_format] = None
         if style:
             if not isinstance(style, list):
                 Messenger.error("The style argument must be a list")
             for s in style:
                 if s not in ATTRIBUTES:
                     Messenger.error(f"{s} doesn't exist, please call Messenger.show_available_styles() for a supported list")
-            exec(f"Messenger.{name_of_format}_STYLE={style}")
+            Messenger.STYLE[name_of_format] = style
         else:
-            exec(f"Messenger.{name_of_format}_STYLE=None")
+            Messenger.STYLE[name_of_format] = None
         
+    def reset_default_color(): # only reset default colors of WARN and ERROR
+        Messenger.TEXT_COLOR['WARN'] = None
+        Messenger.BACK_COLOR['WARN'] = 'on_magenta'
+        Messenger.STYLE['WARN'] = None
+        Messenger.TEXT_COLOR['ERROR'] = None
+        Messenger.BACK_COLOR['ERROR'] = 'on_red'
+        Messenger.STYLE['ERROR'] = None
     
-    def reset_default_color():
-        Messenger.WARNING_TEXT = None
-        Messenger.WARNING_BACK = 'on_magenta'
-        Messenger.WARNING_STYLE = None # note style must be a list    
-        Messenger.ERROR_TEXT = None
-        Messenger.ERROR_BACK = 'on_red'
-        Messenger.ERROR_STYLE = None
-    
-    def custom_msg(name_of_format: str, msg: str, show=True):
-        msg = eval(f"colored(msg, color=Messenger.{name_of_format}_TEXT, on_color=Messenger.{name_of_format}_BACK, attrs=Messenger.{name_of_format}_STYLE)")
-        if show: print(msg)
-        return msg
-        
-    
-    def error(msg: str, show=True) -> str:
-        msg = colored(msg, color=Messenger.ERROR_TEXT, on_color=Messenger.ERROR_BACK, attrs=Messenger.ERROR_STYLE)
-        if show: print(msg)        
-        return msg    
-    
-    def warn(msg: str, show=True) -> str:
-        msg = colored(msg, color=Messenger.WARNING_TEXT, on_color=Messenger.WARNING_BACK, attrs=Messenger.WARNING_STYLE)
-        if show: print(msg)        
-        return msg
+    def reset_default_format(): # remove all personalized formats
+        Messenger.TEXT_COLOR = {'WARN': None, 'ERROR': None}
+        Messenger.BACK_COLOR = {'WARN': 'on_magenta', 'ERROR': 'on_red'}
+        Messenger.STYLE = {'WARN': None, 'ERROR': None}
     
     
-if __name__ == '__main__':        
+    
+if __name__ == '__main__':
     Messenger.warn('warn')
     Messenger.error('error')
     a = 3
