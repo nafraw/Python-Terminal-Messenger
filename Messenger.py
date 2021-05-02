@@ -23,16 +23,16 @@ class Messenger:
     def __init__(self):
         self.reset_default_color()
     ''' Functions to Print colored texts '''
-    def custom_msg(name_of_format: str, msg: str, show=True):
+    def custom_format(name_of_format: str, msg: str, show=True):
         msg = colored(msg, color=Messenger.TEXT_COLOR[name_of_format], on_color=Messenger.BACK_COLOR[name_of_format], attrs=Messenger.STYLE[name_of_format])
         if show: print(msg)
         return msg        
     
     def error(msg: str, show=True) -> str:
-        return Messenger.custom_msg('ERROR', msg, show)
+        return Messenger.custom_format('ERROR', msg, show)
     
     def warn(msg: str, show=True) -> str:
-        return Messenger.custom_msg('WARN', msg, show)
+        return Messenger.custom_format('WARN', msg, show)
     
     ''' Functions to Print supported colors and styles '''
     def show_available_text_colors():
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     a = 3
     msg = f"{a}+b"
     Messenger.set_format('format_1', color='green', back_color='on_red', style=['bold'])
-    Messenger.custom_msg('format_1', msg)
+    Messenger.custom_format('format_1', msg)
     Messenger.set_format('WARNING', color='green', back_color='on_red', style=['bold'])
     Messenger.warn(msg)
     Messenger.reset_default_color()
