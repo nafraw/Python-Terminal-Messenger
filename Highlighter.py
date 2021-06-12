@@ -16,12 +16,13 @@ from termcolor import colored, COLORS, HIGHLIGHTS, ATTRIBUTES
 
 class Highlighter:
     ''' The following three variables are together refered as format here '''
-    TEXT_COLOR = {'WARN': None, 'ERROR': None}
-    BACK_COLOR = {'WARN': 'on_magenta', 'ERROR': 'on_red'}
-    STYLE = {'WARN': None, 'ERROR': None}
+    TEXT_COLOR = {'WARN': None, 'ERROR': None, 'IMPORTANT': None}
+    BACK_COLOR = {'WARN': 'on_magenta', 'ERROR': 'on_red', 'IMPORTANT': 'on_green'}
+    STYLE = {'WARN': None, 'ERROR': None, 'IMPORTANT': None}
     
     def __init__(self):
-        self.reset_default_color()
+        pass
+    
     ''' Functions to Print colored texts '''
     def custom_format(name_of_format: str, msg: str, show=True):
         msg = colored(msg, color=Highlighter.TEXT_COLOR[name_of_format], on_color=Highlighter.BACK_COLOR[name_of_format], attrs=Highlighter.STYLE[name_of_format])
@@ -33,6 +34,9 @@ class Highlighter:
     
     def warn(msg: str, show=True) -> str:
         return Highlighter.custom_format('WARN', msg, show)
+    
+    def important(msg: str, show=True) -> str:
+        return Highlighter.custom_format('IMPORTANT', msg, show)
     
     ''' Functions to Print supported colors and styles '''
     def show_available_text_colors():
